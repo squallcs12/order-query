@@ -12,6 +12,7 @@ class OrderQuerySet(models.QuerySet):
 
 
 OLD_STATUS_PENDING = 'Pending'
+OLD_STATUS_COMPLETE = 'Complete'
 OLD_STATUS_CANCELLED = 'Cancelled'
 
 OLD_STATUS_CHOICES = (
@@ -35,6 +36,18 @@ class Order(models.Model):
     objects = OrderQuerySet.as_manager()
     # optimize for latest status
     status = models.SmallIntegerField(choices=NEW_STATUS_CHOICES, default=NEW_STATUS_PENDING)
+
+    def cancel(self):
+        self.status = NEW_STATUS_CANCELLED
+        self.save()
+
+        self.orderstatus_set.create(status=OLD_STATUS_CANCELLED)
+
+    def complete(self):
+        self.status = NEW_STATUS_COMPLETE
+        self.save()
+
+        self.orderstatus_set.create(status=OLD_STATUS_COMPLETE)
 
     class Meta:
         # optimize for query status faster
