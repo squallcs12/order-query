@@ -1,0 +1,55 @@
+version: "3.4"
+
+networks:
+  lan_access:
+    driver: bridge
+
+services:
+  app:
+    build:
+      context: .
+      args:
+        BUILD_ENV: dev
+      target: container-dev
+    volumes:
+      - .:/app/
+      - ~/.ssh:/root/.ssh
+      - backend_env:/root/.cache/
+      - backend_py_env:/usr/local/lib/python3.9/
+    depends_on:
+      redis:
+          condition: service_healthy
+      postgres:
+          condition: service_healthy
+    command: ["python"]
+    ports:
+      - "8000:8000"
+    networks:
+      - lan_access
+      - default
+
+  postgres:
+    image: kartoza/postgis:15
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db
+    volumes:
+      - postgres_db:/var/lib/postgresql/data
+    networks:
+      - lan_access
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U root -d db" ]
+      interval: 5s
+      timeout: 5s
+      retries: 100
+  redis:
+    image: redis:4.0
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+
+
+volumes:
+  postgres_db:
+  backend_env:
+  backend_py_env:
