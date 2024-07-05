@@ -198,6 +198,11 @@ Run command to see the difference between the 2 solution
 ```shell
 # compare_performance_select_order <number of orders> <number of run>
 python manage.py compare_performance_select_order 1000 1000
+root@7ccee305cce5:/app# python manage.py compare_performance_select_order 0 100
+0.024395210999500705
+0.004217634999804432
+
+The optimized solution is 5.8 times faster than the original solution
 ```
 ## CI
 https://github.com/squallcs12/order-query/actions
