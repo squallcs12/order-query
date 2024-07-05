@@ -23,7 +23,9 @@ jobs:
       - name: Install flake8
         run: pip install poetry
       - name: Install os dependencies
-        run: apt-get install --no-install-recommends build-essential apt-utils procps libgdal-dev gettext curl dos2unix -y
+        run: |
+          apt update
+          apt install --no-install-recommends build-essential apt-utils procps libgdal-dev gettext curl dos2unix -y
       - name: Install poetry
         run: |
           poetry install
