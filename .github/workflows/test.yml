@@ -26,9 +26,9 @@ jobs:
         run: |
           apt update
           apt install --no-install-recommends build-essential apt-utils procps libgdal-dev gettext curl dos2unix -y
-      - name: Install poetry
+      - name: Install python packages
         run: |
-          poetry install
           poetry config virtualenvs.create false
+          poetry install
       - name: Run test
         run: python manage.py test
