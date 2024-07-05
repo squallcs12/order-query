@@ -1,0 +1,17 @@
+name: Lint
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  flake8:
+    runs-on: [self-hosted, linux, x64]
+    container: python:3.12-slim-bullseye
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install flake8
+        run: pip install flake8==3.9.2 flake8-quotes==3.3.0 flake8-commas==2.0.0
+      - name: Run flake8
+        run: flake8 --count --show-source --statistics
