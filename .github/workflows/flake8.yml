@@ -7,7 +7,7 @@ on:
 
 jobs:
   flake8:
-    runs-on: [self-hosted, linux, x64]
+    runs-on: ubuntu-latest
     container: python:3.12-slim-bullseye
     steps:
       - uses: actions/checkout@v3
