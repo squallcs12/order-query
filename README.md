@@ -192,5 +192,12 @@ def assert_orders_correct(self, orders):
     self.assertEqual(orders[0], self.order1)
     self.assertEqual(orders[1], self.order3)
 ```
+
+### Benchmark
+Run command to see the difference between the 2 solution
+```shell
+# compare_performance_select_order <number of orders> <number of run>
+python manage.py compare_performance_select_order 1000 1000
+```
 ## CI
 https://github.com/squallcs12/order-query/actions
