@@ -13,35 +13,28 @@ RUN  pip install -U pip poetry \
 
 WORKDIR /app
 CMD ["/app/entrypoint.sh"]
-#
-#COPY .docker/app/.bashrc /root/.bashrc
-#RUN dos2unix /root/.bashrc
-#
-#ADD poetry.lock pyproject.toml ./
+
+ADD poetry.lock pyproject.toml ./
 
 # prod target
 FROM build AS container-prod
 
 RUN pip install uwsgi ddtrace
 
-#COPY . .
-#RUN poetry install --no-dev
-#RUN cp .env.test .env.custom \
-#&& poetry run python manage.py compilemessages \
-#&& rm .env.custom \
-#&& rm -rf /root/.cache/pip/
+COPY . .
+RUN poetry install --no-dev \
+&& rm -rf /root/.cache/pip/
 # dev target
 FROM build AS container-dev
 
-#RUN apt-get update \
-#&& apt-get install -y postgresql-client git zsh curl \
-#&& sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-#
-#
-#COPY . .
-#RUN poetry install \
-#&& cp /app/.docker/app/.zshrc /root/.zshrc \
-#&& dos2unix /root/.zshrc
+RUN apt-get update \
+&& apt-get install -y postgresql-client git zsh curl \
+&& sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+COPY . .
+RUN poetry install \
+&& cp /app/.docker/app/.zshrc /root/.zshrc \
+&& dos2unix /root/.zshrc
 
 FROM container-${BUILD_ENV}
 CMD ["/app/entrypoint.sh"]

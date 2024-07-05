@@ -5,7 +5,7 @@ class OrderQuerySet(models.QuerySet):
     def get_cancelled_orders(self):
         order_status = OrderStatus.objects.filter(order=models.OuterRef('pk'))
         latest_status = order_status.order_by('order', '-created_at').distinct('order').values('status')
-        return self.annotate(sub=models.Subquery(latest_status)).filter(sub=OLD_STATUS_CANCELLED)
+        return self.annotate(sub=models.Subquery(latest_status)).filter(sub=NEW_STATUS_CANCELLED)
 
     def get_new_cancelled_orders(self):
         return self.filter(status=NEW_STATUS_CANCELLED)
